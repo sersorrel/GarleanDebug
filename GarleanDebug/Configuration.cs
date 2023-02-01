@@ -1,8 +1,8 @@
-﻿using Dalamud.Configuration;
-using Dalamud.Plugin;
 using System;
+using Dalamud.Configuration;
+using Dalamud.Plugin;
 
-namespace SamplePlugin
+namespace GarleanDebug
 {
     [Serializable]
     public class Configuration : IPluginConfiguration

@@ -1,21 +1,23 @@
-﻿using Dalamud.Game.Command;
+using System.IO;
+using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
-using Dalamud.Interface.Windowing;
-using SamplePlugin.Windows;
+using GarleanDebug.Windows;
+using JetBrains.Annotations;
 
-namespace SamplePlugin
+namespace GarleanDebug
 {
+    [PublicAPI]
     public sealed class Plugin : IDalamudPlugin
     {
-        public string Name => "Sample Plugin";
-        private const string CommandName = "/pmycommand";
+        public string Name => "the Garlean Debugger";
+        private const string CommandName = "/gdb";
 
         private DalamudPluginInterface PluginInterface { get; init; }
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
-        public WindowSystem WindowSystem = new("SamplePlugin");
+        public WindowSystem WindowSystem = new("GarleanDebug");
 
         private ConfigWindow ConfigWindow { get; init; }
         private MainWindow MainWindow { get; init; }

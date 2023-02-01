@@ -1,0 +1,9 @@
+{
+  "Author": "ash",
+  "Name": "Garlean Debugger",
+  "Punchline": "The Garlean Debugger lets you inspect and modify memory without external tools.",
+  "Description": "For information, try /gdb.",
+  "InternalName": "GarleanDebug",
+  "ApplicableVersion": "any",
+  "Tags": []
+}
