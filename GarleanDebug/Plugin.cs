@@ -1,4 +1,3 @@
-using System.IO;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -32,12 +31,12 @@ public sealed class Plugin: IDalamudPlugin {
         this.CommandManager.AddHandler(
             CommandName,
             new CommandInfo(this.OnCommand) {
-                HelpMessage = "A useful message to display in /xlhelp",
+                HelpMessage = "Show help for the Garlean Debugger",
             }
         );
 
-        this.PluginInterface.UiBuilder.Draw += this.DrawUI;
-        this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUI;
+        this.PluginInterface.UiBuilder.Draw += this.DrawUi;
+        this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUi;
     }
 
     private DalamudPluginInterface PluginInterface { get; init; }
@@ -46,7 +45,7 @@ public sealed class Plugin: IDalamudPlugin {
 
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
-    public string Name => "the Garlean Debugger";
+    public string Name => "Garlean Debugger";
 
     public void Dispose() {
         this.WindowSystem.RemoveAllWindows();
@@ -62,11 +61,11 @@ public sealed class Plugin: IDalamudPlugin {
         this.MainWindow.IsOpen = true;
     }
 
-    private void DrawUI() {
+    private void DrawUi() {
         this.WindowSystem.Draw();
     }
 
-    public void DrawConfigUI() {
+    public void DrawConfigUi() {
         this.ConfigWindow.IsOpen = true;
     }
 }

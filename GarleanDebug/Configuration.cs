@@ -5,19 +5,19 @@ using Dalamud.Plugin;
 namespace GarleanDebug;
 
 [Serializable]
-public class Configuration: IPluginConfiguration {
+public sealed class Configuration: IPluginConfiguration {
     // the below exist just to make saving less cumbersome
     [NonSerialized]
-    private DalamudPluginInterface? PluginInterface;
+    private DalamudPluginInterface? pluginInterface;
 
     public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
     public int Version { get; set; } = 0;
 
     public void Initialize(DalamudPluginInterface pluginInterface) {
-        this.PluginInterface = pluginInterface;
+        this.pluginInterface = pluginInterface;
     }
 
     public void Save() {
-        this.PluginInterface!.SavePluginConfig(this);
+        this.pluginInterface!.SavePluginConfig(this);
     }
 }

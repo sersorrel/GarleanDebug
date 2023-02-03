@@ -2,15 +2,14 @@ using System;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using ImGuiScene;
 
 namespace GarleanDebug.Windows;
 
-public class MainWindow: Window, IDisposable {
-    private readonly Plugin Plugin;
+public sealed class MainWindow: Window, IDisposable {
+    private readonly Plugin plugin;
 
     public MainWindow(Plugin plugin): base(
-        "My Amazing Window",
+        "Garlean Debugger",
         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
     ) {
         this.SizeConstraints = new WindowSizeConstraints {
@@ -18,17 +17,16 @@ public class MainWindow: Window, IDisposable {
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
         };
 
-        this.Plugin = plugin;
+        this.plugin = plugin;
     }
 
-    public void Dispose() {
-    }
+    public void Dispose() {}
 
     public override void Draw() {
-        ImGui.Text($"The random config bool is {this.Plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
+        ImGui.Text($"The random config bool is {this.plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings")) {
-            this.Plugin.DrawConfigUI();
+            this.plugin.DrawConfigUi();
         }
     }
 }
