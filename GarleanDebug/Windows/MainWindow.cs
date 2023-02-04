@@ -26,7 +26,7 @@ public sealed class MainWindow: Window, IDisposable {
         ImGui.Text($"The random config bool is {this.plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings")) {
-            this.plugin.DrawConfigUi();
+            this.plugin.OpenConfigUi();
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -10,6 +12,8 @@ namespace GarleanDebug;
 [PublicAPI]
 public sealed class Plugin: IDalamudPlugin {
     private const string CommandName = "/gdb";
+
+    private Stack<Action> disposeActions = new();
     public WindowSystem WindowSystem = new("GarleanDebug");
 
     public Plugin(
@@ -23,10 +27,13 @@ public sealed class Plugin: IDalamudPlugin {
         this.Configuration.Initialize(this.PluginInterface);
 
         this.ConfigWindow = new ConfigWindow(this);
+        this.disposeActions.Push(() => this.ConfigWindow.Dispose());
         this.MainWindow = new MainWindow(this);
+        this.disposeActions.Push(() => this.MainWindow.Dispose());
 
         this.WindowSystem.AddWindow(this.ConfigWindow);
         this.WindowSystem.AddWindow(this.MainWindow);
+        this.disposeActions.Push(() => this.WindowSystem.RemoveAllWindows());
 
         this.CommandManager.AddHandler(
             CommandName,
@@ -34,9 +41,12 @@ public sealed class Plugin: IDalamudPlugin {
                 HelpMessage = "Show help for the Garlean Debugger",
             }
         );
+        this.disposeActions.Push(() => this.CommandManager.RemoveHandler(CommandName));
 
-        this.PluginInterface.UiBuilder.Draw += this.DrawUi;
-        this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUi;
+        this.PluginInterface.UiBuilder.Draw += this.Draw;
+        this.disposeActions.Push(() => this.PluginInterface.UiBuilder.Draw -= this.Draw);
+        this.PluginInterface.UiBuilder.OpenConfigUi += this.OpenConfigUi;
+        this.disposeActions.Push(() => this.PluginInterface.UiBuilder.OpenConfigUi -= this.OpenConfigUi);
     }
 
     private DalamudPluginInterface PluginInterface { get; init; }
@@ -48,12 +58,9 @@ public sealed class Plugin: IDalamudPlugin {
     public string Name => "Garlean Debugger";
 
     public void Dispose() {
-        this.WindowSystem.RemoveAllWindows();
-
-        this.ConfigWindow.Dispose();
-        this.MainWindow.Dispose();
-
-        this.CommandManager.RemoveHandler(CommandName);
+        foreach (var action in this.disposeActions) {
+            action.Invoke();
+        }
     }
 
     private void OnCommand(string command, string args) {
@@ -61,11 +68,11 @@ public sealed class Plugin: IDalamudPlugin {
         this.MainWindow.IsOpen = true;
     }
 
-    private void DrawUi() {
+    private void Draw() {
         this.WindowSystem.Draw();
     }
 
-    public void DrawConfigUi() {
+    public void OpenConfigUi() {
         this.ConfigWindow.IsOpen = true;
     }
 }
