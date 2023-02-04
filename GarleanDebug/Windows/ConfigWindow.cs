@@ -9,11 +9,9 @@ public sealed class ConfigWindow: Window, IDisposable {
     private readonly Configuration configuration;
 
     public ConfigWindow(Plugin plugin): base(
-        "A Wonderful Configuration Window",
+        "Garlean Debugger configuration",
         ImGuiWindowFlags.NoResize
         | ImGuiWindowFlags.NoCollapse
-        | ImGuiWindowFlags.NoScrollbar
-        | ImGuiWindowFlags.NoScrollWithMouse
     ) {
         this.Size = new Vector2(232, 75);
         this.SizeCondition = ImGuiCond.Always;

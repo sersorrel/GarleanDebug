@@ -38,7 +38,7 @@ public sealed class Plugin: IDalamudPlugin {
         this.CommandManager.AddHandler(
             CommandName,
             new CommandInfo(this.OnCommand) {
-                HelpMessage = "Show help for the Garlean Debugger",
+                HelpMessage = "Use the Garlean Debugger",
             }
         );
         this.disposeActions.Push(() => this.CommandManager.RemoveHandler(CommandName));
