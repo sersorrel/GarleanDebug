@@ -10,13 +10,8 @@ public sealed class MainWindow: Window, IDisposable {
 
     public MainWindow(Plugin plugin): base(
         "Garlean Debugger",
-        ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
+        ImGuiWindowFlags.AlwaysAutoResize
     ) {
-        this.SizeConstraints = new WindowSizeConstraints {
-            MinimumSize = new Vector2(375, 330),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
-        };
-
         this.plugin = plugin;
     }
 

@@ -10,12 +10,8 @@ public sealed class ConfigWindow: Window, IDisposable {
 
     public ConfigWindow(Plugin plugin): base(
         "Garlean Debugger configuration",
-        ImGuiWindowFlags.NoResize
-        | ImGuiWindowFlags.NoCollapse
+        ImGuiWindowFlags.AlwaysAutoResize
     ) {
-        this.Size = new Vector2(232, 75);
-        this.SizeCondition = ImGuiCond.Always;
-
         this.configuration = plugin.Configuration;
     }
 
