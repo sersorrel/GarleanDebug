@@ -1,10 +1,33 @@
 using System;
+using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
 namespace GarleanDebug.Windows;
 
+internal class MemoryViewConfig {
+    private int height = 10;
+    private nint startAddress;
+    private int width = 16;
+
+    public required nint StartAddress {
+        get => this.startAddress;
+        set => this.startAddress = nint.Clamp(value, 0, nint.MaxValue - (this.width * this.height));
+    }
+
+    public int Width {
+        get => this.width;
+        set => this.width = int.Clamp(value, 1, int.MaxValue / this.Height);
+    }
+
+    public int Height {
+        get => this.height;
+        set => this.height = int.Clamp(value, 1, int.MaxValue / this.Width);
+    }
+}
+
 public sealed class MainWindow: Window, IDisposable {
+    private readonly MemoryViewConfig memoryViewConfig;
     private readonly Plugin plugin;
 
     public MainWindow(Plugin plugin): base(
@@ -12,23 +35,21 @@ public sealed class MainWindow: Window, IDisposable {
         ImGuiWindowFlags.AlwaysAutoResize
     ) {
         this.plugin = plugin;
+        this.memoryViewConfig = new MemoryViewConfig { StartAddress = 0 };
     }
 
     public void Dispose() {}
 
-    private nint baseAddr = 0;
-    private int stride = 16;
-    private int lines = 10;
-
     public override void Draw() {
-        ImGui.PushFont(Dalamud.Interface.UiBuilder.MonoFont);
-        if (ImGui.BeginTable("memory", this.stride + 1)) {
-            for (var line = 0; line < lines; line++) {
-                var addr = this.baseAddr + (line * stride);
+        ImGui.PushFont(UiBuilder.MonoFont);
+        ImGui.BeginGroup();
+        if (ImGui.BeginTable("memory", this.memoryViewConfig.Width + 2)) {
+            for (var line = 0; line < this.memoryViewConfig.Height; line++) {
+                var addr = this.memoryViewConfig.StartAddress + (line * this.memoryViewConfig.Width);
                 ImGui.TableNextRow();
                 ImGui.TableSetColumnIndex(0);
                 ImGui.Text($"0x{addr:x8}");
-                for (var i = 0; i < stride; i++) {
+                for (var i = 0; i < this.memoryViewConfig.Width; i++) {
                     ImGui.TableSetColumnIndex(i + 1);
                     unsafe {
                         var result = "??";
@@ -36,7 +57,7 @@ public sealed class MainWindow: Window, IDisposable {
                             var val = *(byte*)(addr + i);
                             result = $"{val:x2}";
                         } catch (NullReferenceException) {
-                            result = "--";
+                            result = "??";
                         } catch (AccessViolationException) {
                             result = "--";
                         } finally {
@@ -45,9 +66,28 @@ public sealed class MainWindow: Window, IDisposable {
                     }
                 }
             }
+
             ImGui.EndTable();
         }
+
+        ImGui.EndGroup();
         ImGui.PopFont();
+
+        ImGui.SameLine();
+
+        ImGui.BeginGroup();
+        ImGui.PushButtonRepeat(true);
+
+        if (ImGui.ArrowButton("up", ImGuiDir.Up)) {
+            this.memoryViewConfig.StartAddress -= this.memoryViewConfig.Width;
+        }
+
+        if (ImGui.ArrowButton("down", ImGuiDir.Down)) {
+            this.memoryViewConfig.StartAddress += this.memoryViewConfig.Width;
+        }
+
+        ImGui.PopButtonRepeat();
+        ImGui.EndGroup();
 
         ImGui.Separator();
 
