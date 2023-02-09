@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
@@ -29,6 +30,8 @@ internal class MemoryViewConfig {
 public sealed class MainWindow: Window, IDisposable {
     private readonly MemoryViewConfig memoryViewConfig;
     private readonly Plugin plugin;
+
+    private string nextMemoryAddr = string.Empty;
 
     public MainWindow(Plugin plugin): base(
         "Garlean Debugger",
@@ -88,6 +91,23 @@ public sealed class MainWindow: Window, IDisposable {
 
         ImGui.PopButtonRepeat();
         ImGui.EndGroup();
+
+        {
+            ImGui.AlignTextToFramePadding();
+            ImGui.Text("0x");
+            ImGui.SameLine(0, .0f);
+            var enterPressed = ImGui.InputText(
+                "##newAddr",
+                ref this.nextMemoryAddr,
+                8,
+                ImGuiInputTextFlags.CharsHexadecimal | ImGuiInputTextFlags.EnterReturnsTrue
+            );
+            ImGui.SameLine();
+            var goPressed = ImGui.Button("Go");
+            if (enterPressed || goPressed) {
+                this.memoryViewConfig.StartAddress = nint.Parse(this.nextMemoryAddr, NumberStyles.HexNumber);
+            }
+        }
 
         ImGui.Separator();
 
