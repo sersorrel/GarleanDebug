@@ -97,7 +97,7 @@ internal class Commands {
         if (uint.TryParse(match.Groups[1].Value, out var id)) {
             unsafe {
                 var agent = (byte*)Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalID(id);
-                plugin.ChatGui.Print($"Agent {id} is at address 0x{(nint)agent:x8}");
+                plugin.ChatGui.Print($"Agent {id} is at address 0x" + ((nint)agent).ToString("x" + (nint.Size * 2)));
             }
         } else {
             plugin.ChatGui.PrintError("Need an agent number!");
@@ -111,12 +111,13 @@ internal class Commands {
                 unsafe {
                     var agent = (byte*)Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(id);
                     if ((nint)agent == addr) {
-                        plugin.ChatGui.Print($"Agent at 0x{addr:x8} is '{id}' (ID {(uint)id})");
+                        plugin.ChatGui.Print("Agent at 0x" + addr.ToString("x" + (nint.Size * 2)) + $" is '{id}' (ID {(uint)id})");
                         return;
                     }
                 }
             }
-            plugin.ChatGui.PrintError($"No agent found at address 0x{addr:x8}");
+
+            plugin.ChatGui.PrintError($"No agent found at address 0x" + addr.ToString("x" + (nint.Size * 2)));
         } else {
             plugin.ChatGui.PrintError("Need an agent address!");
         }

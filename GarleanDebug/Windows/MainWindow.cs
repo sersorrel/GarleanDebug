@@ -51,7 +51,7 @@ public sealed class MainWindow: Window, IDisposable {
                 var addr = this.memoryViewConfig.StartAddress + (line * this.memoryViewConfig.Width);
                 ImGui.TableNextRow();
                 ImGui.TableSetColumnIndex(0);
-                ImGui.Text($"0x{addr:x8}");
+                ImGui.Text("0x" + addr.ToString("x" + (nint.Size * 2)));
                 for (var i = 0; i < this.memoryViewConfig.Width; i++) {
                     ImGui.TableSetColumnIndex(i + 1);
                     unsafe {
@@ -99,7 +99,7 @@ public sealed class MainWindow: Window, IDisposable {
             var enterPressed = ImGui.InputText(
                 "##newAddr",
                 ref this.nextMemoryAddr,
-                8,
+                (uint)(nint.Size * 2),
                 ImGuiInputTextFlags.CharsHexadecimal | ImGuiInputTextFlags.EnterReturnsTrue
             );
             ImGui.SameLine();
