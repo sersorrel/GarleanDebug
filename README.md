@@ -2,7 +2,7 @@
 
 _an ffxiv plogon_
 
-The Garlean Debugger lets you inspect and modify memory without external tools.
+The magitek-powered Garlean Debugger lets you inspect memory without external tools.
 
 ## Usage
 

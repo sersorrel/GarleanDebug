@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Version>0.0.0.1</Version>
-        <Description>The Garlean Debugger lets you inspect and modify memory without external tools.</Description>
+        <Description>The magitek-powered Garlean Debugger lets you inspect memory without external tools.</Description>
         <PackageProjectUrl>https://github.com/sersorrel/GarleanDebug</PackageProjectUrl>
     </PropertyGroup>
 
