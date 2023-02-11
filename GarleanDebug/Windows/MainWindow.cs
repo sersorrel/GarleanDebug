@@ -96,12 +96,14 @@ public sealed class MainWindow: Window, IDisposable {
             ImGui.AlignTextToFramePadding();
             ImGui.Text("0x");
             ImGui.SameLine(0, .0f);
+            ImGui.PushFont(UiBuilder.MonoFont);
             var enterPressed = ImGui.InputText(
                 "##newAddr",
                 ref this.nextMemoryAddr,
                 (uint)(nint.Size * 2),
                 ImGuiInputTextFlags.CharsHexadecimal | ImGuiInputTextFlags.EnterReturnsTrue
             );
+            ImGui.PopFont();
             ImGui.SameLine();
             var goPressed = ImGui.Button("Go");
             if (enterPressed || goPressed) {
