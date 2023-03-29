@@ -18,11 +18,13 @@ namespace GarleanDebug;
 [AttributeUsage(AttributeTargets.Method)]
 [MeansImplicitUse]
 internal class CommandAttribute: Attribute {
-    public CommandAttribute(string regex) {
+    public CommandAttribute(string regex, bool hidden = false) {
+        this.Hidden = hidden;
         this.OriginalRegex = regex;
         this.Regex = new Regex($"^(?:{regex})$");
     }
 
+    public bool Hidden { get; }
     public string OriginalRegex { get; }
     public Regex Regex { get; }
 }
@@ -66,7 +68,7 @@ internal class Commands {
         throw new ArgumentException($"no command found for: {s}");
     }
 
-    [Command("")]
+    [Command("", hidden: true)]
     public void NullCommand(Match match, Plugin plugin) {
         this.HelpCommand(match, plugin);
     }
