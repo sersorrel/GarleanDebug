@@ -46,7 +46,7 @@ public sealed class MainWindow: Window, IDisposable {
     public override void Draw() {
         ImGui.PushFont(UiBuilder.MonoFont);
         ImGui.BeginGroup();
-        if (ImGui.BeginTable("memory", this.memoryViewConfig.Width + 2)) {
+        if (ImGui.BeginTable("memory", (this.memoryViewConfig.Width * 2) + 3)) {
             for (var line = 0; line < this.memoryViewConfig.Height; line++) {
                 var addr = this.memoryViewConfig.StartAddress + (line * this.memoryViewConfig.Width);
                 ImGui.TableNextRow();
@@ -61,6 +61,24 @@ public sealed class MainWindow: Window, IDisposable {
                             result = $"{val:x2}";
                         } catch (NullReferenceException) {
                             result = "??";
+                        } catch (AccessViolationException) {
+                            result = "--";
+                        } finally {
+                            ImGui.Text(result);
+                        }
+                    }
+                }
+
+                ImGui.TableSetColumnIndex(this.memoryViewConfig.Width + 1);
+                ImGui.Text("|");
+                for (var i = 0; i < this.memoryViewConfig.Width; i++) {
+                    ImGui.TableSetColumnIndex(this.memoryViewConfig.Width + i + 2);
+                    unsafe {
+                        var result = ".";
+                        try {
+                            result = Convert.ToChar(*(byte*)(addr + i)).ToString();
+                        } catch (NullReferenceException) {
+                            result = "?";
                         } catch (AccessViolationException) {
                             result = "--";
                         } finally {
