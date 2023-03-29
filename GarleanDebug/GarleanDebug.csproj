@@ -23,11 +23,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
-        <DalamudLibPath>$(HOME)\.xlcore\dalamud\Hooks\dev\</DalamudLibPath>
+        <DalamudLibPath>$(DALAMUD_HOME)/</DalamudLibPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
-        <DalamudLibPath>$(DALAMUD_HOME)/</DalamudLibPath>
+        <DalamudLibPath>$(HOME)\.xlcore\dalamud\Hooks\dev\</DalamudLibPath>
     </PropertyGroup>
 
     <ItemGroup>
